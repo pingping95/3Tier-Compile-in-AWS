@@ -39,16 +39,24 @@ fi
 
 TOMCAT_CONNECTOR_VER=1.2.48
 read -rp "Input Tomcat_IP >>" TOMCAT_IP
-
+echo ""
+echo ""
+echo ""
+echo ""
+read -rp "Input APACHE_HOME_DIR >>" APACHE_HOME
 
 ### Define Functions
 
 show_message() {
+    echo ""
+    echo ""
     echo "#############################################"
     echo ""
     echo "$1"
     echo ""
     echo "#############################################"
+    echo ""
+    echo ""
     sleep 5
 }
 
@@ -72,15 +80,14 @@ wget http://apache.tt.co.kr/tomcat/tomcat-connectors/jk/tomcat-connectors-$TOMCA
 
 tar zxvf tomcat-connectors-$TOMCAT_CONNECTOR_VER-src.tar.gz
 
-APXS_PATH=$(which apxs)
 
 cd tomcat-connectors-$TOMCAT_CONNECTOR_VER-src/native/
 
-./configure --with-apxs="$APXS_PATH"
+./configure --with-apxs="$APACHE_HOME/bin/apxs"
 
 make; make install
 
-mv apache-2.0/mod_jk.so /usr/local/apache2.4/modules/
+mv ./apache-2.0/mod_jk.so $APACHE_HOME/modules/
 
 
 # 3. Edit Apache configuration Files
@@ -91,7 +98,7 @@ show_message "Edit Apache Configuration Files"
 
 show_message "1. httpd.conf"
 
-cat << EOF >> /usr/local/apache2.4/conf/httpd.conf
+cat << EOF >> $APACHE_HOME/conf/httpd.conf
 
 Include conf/mod_jk.conf
 
@@ -103,7 +110,7 @@ show_message "2. mod_jk.conf"
 
 if [ -d /usr/local/apache2.4/runs ]; then
 
-cat << EOF >> /usr/local/apache2.4/conf/mod_jk.conf
+cat << EOF >> $APACHE_HOME/conf/mod_jk.conf
 
 JkWorkersFile conf/workers.properties
 JkShmFile     runs/mod_jk.shm
@@ -117,7 +124,7 @@ EOF
 
 else
 
-cat << EOF >> /usr/local/apache2.4/conf/mod_jk.conf
+cat << EOF >> $APACHE_HOME/conf/mod_jk.conf
 
 JkWorkersFile conf/workers.properties
 JkShmFile     logs/mod_jk.shm
@@ -136,7 +143,7 @@ fi
 show_message "3. workers.properties"
 
 
-cat << EOF >> /usr/local/apache2.4/conf/workers.properties
+cat << EOF >> $APACHE_HOME/conf/workers.properties
 ##### workers.properties ##
 worker.list=worker1
 worker.worker1.type=ajp13
@@ -150,7 +157,7 @@ EOF
 show_message "4. uriworkermap.properties"
 
 
-cat << EOF >> /usr/local/apache2.4/conf/uriworkermap.properties
+cat << EOF >> $APACHE_HOME/conf/uriworkermap.properties
 /*=worker1
 !/*.html=worker1
 EOF
