@@ -17,7 +17,7 @@ if [ "$EUID" -ne 0 ]; then
     echo ""
     echo "ROOT Privilege is required."
     echo ""
-    echo "Usage : sudo ./ubuntu_mod_jk_link.sh"
+    echo "Usage : sudo ./ubuntu_apache_compile.sh"
     echo ""
     echo "##############################################"
     exit
