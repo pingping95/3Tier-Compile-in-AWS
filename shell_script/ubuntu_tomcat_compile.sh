@@ -132,8 +132,9 @@ EOF
 
 ## 6. Restart Daemon
 
-systemctl daemon-reload 
-systemctl restart tomcat
+sudo systemctl daemon-reload 
+sudo systemctl restart tomcat
+sudo systemctl enable tomcat
 
 
 show_message "Tomcat Installation completed"
